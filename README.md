@@ -20,6 +20,12 @@ function write_sw() {
 Add this entry to your `composer.json` file:
 
 ```js
+"repositories": [
+    {
+        "type": "vcs",
+        "url": "https://github.com/mozilla/wp-sw-manager"
+    }
+],
 require: {
     "mozilla/wp-sw-manager": "dev-master"
 }
