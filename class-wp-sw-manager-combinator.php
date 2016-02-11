@@ -25,8 +25,8 @@ class WP_SW_Manager_Combinator {
 
     public function write_content() {
         foreach ($this->writers as $content_generator) {
+            echo ';';
             call_user_func($content_generator);
-            echo ';\n';
         }
     }
 
