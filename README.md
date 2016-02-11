@@ -26,7 +26,7 @@ Add this entry to your `composer.json` file:
         "url": "https://github.com/mozilla/wp-sw-manager"
     }
 ],
-require: {
+"require": {
     "mozilla/wp-sw-manager": "dev-master"
 }
 ```
