@@ -27,17 +27,10 @@ require: {
 
 ## Usage
 
-There should be only one manager per WordPress installation so before including it, check for the class existence and include only if it does not exist yet.
+First, include the library and get the manager:
 
 ```php
-if (!class_exists('WP_SW_Manager')) {
-  include_once(plugins_url(__FILE__) . /vendor/mozilla/wp-sw-manager);
-}
-```
-
-Once included, access the manager instance:
-
-```php
+include_once(plugins_url(__FILE__) . /vendor/mozilla/wp-sw-manager);
 $swmgr = WP_SW_Manager::get_manager();
 ```
 
