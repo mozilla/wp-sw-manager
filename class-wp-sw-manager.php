@@ -3,7 +3,7 @@
 if (!class_exists('WP_SW_Manager')) {
     require_once(__DIR__ . '/class-wp-sw-manager-router.php');
     require_once(__DIR__ . '/class-wp-sw-manager-combinator.php');
-    
+
     /**
      * Holds the shared manager for composing the service workers.
      *
@@ -49,11 +49,11 @@ if (!class_exists('WP_SW_Manager')) {
          * @var string
          */
         const SW_REGISTRAR_SCRIPT = 'wp-sw-manager-registrar';
-    
+
         const SW_REGISTRAR_SCRIPT_URL = 'wpswmanager/sw-registrar.js';
-    
+
         private static $instance;
-    
+
         /**
          * Obtains the shared manager.
          *
@@ -66,17 +66,17 @@ if (!class_exists('WP_SW_Manager')) {
             }
             return self::$instance;
         }
-    
+
         private $router;
-    
+
         private $service_workers;
-    
+
         private function __construct() {
             $this->router = WP_SW_Manager_Router::get_router();
             $this->service_workers = array();
             $this->setup_sw_registrar_script();
         }
-    
+
         /**
          * Selects the combinator representing the service worker to write into.
          *
@@ -86,7 +86,7 @@ if (!class_exists('WP_SW_Manager')) {
          *
          * @api
          * @param string $scope The scope used to select the service worker.
-         * If omitted, it defaults to `home_url('/', 'relative')`;
+         * If omitted, it defaults to the URL where WordPress site is installed.
          * @return WP_SW_Combinator The combinator instance to generate the
          * content of the service worker.
          */
@@ -97,7 +97,7 @@ if (!class_exists('WP_SW_Manager')) {
             }
             return $this->service_workers[$scope];
         }
-    
+
         /**
          * Obtains the JavaScript ID to select the registration promise in
          * JavaScript client code.
@@ -112,7 +112,7 @@ if (!class_exists('WP_SW_Manager')) {
          *
          * @api
          * @param string $scope The scope identifying the service worker.
-         * If omitted, it defaults to `home_url('/', 'relative')`;
+         * If omitted, it defaults to the URL where WordPress site is installed.
          * @return string A string representing the unique identifier for the
          * service worker registration promise.
          */
@@ -120,30 +120,29 @@ if (!class_exists('WP_SW_Manager')) {
             if (!$scope) { $scope = $this->default_scope(); }
             return $scope;
         }
-    
+
         private function default_scope() {
-            return home_url('/', 'relative');
+            return site_url('/', 'relative');
         }
-    
+
         private function setup_sw_registrar_script() {
             $this->router->add_route(self::SW_REGISTRAR_SCRIPT_URL,  array($this, 'sw_registrar'));
             add_action('wp_enqueue_scripts', array($this, 'enqueue_registrar'));
         }
-    
+
         public function enqueue_registrar() {
-            wp_register_script(
-                self::SW_REGISTRAR_SCRIPT,
-                $this->router->route_url(self::SW_REGISTRAR_SCRIPT_URL)
-            );
+            $real_absolute_url = $this->router->route_url(self::SW_REGISTRAR_SCRIPT_URL);
+            $relative_to_root_url = ltrim($real_absolute_url, site_url('', 'relative'));
+            wp_register_script(self::SW_REGISTRAR_SCRIPT, $relative_to_root_url);
         }
-    
+
         private function add_new_sw($scope) {
             $virtual_url = "wpswmanager/sw/sw@$scope";
             $real_url = $this->router->add_route($virtual_url, array($this, 'write_sw'), $scope);
             $service_worker = new WP_SW_Manager_Combinator($real_url);
             $this->service_workers[$scope] = $service_worker;
         }
-    
+
         public function sw_registrar() {
             header('Content-Type: application/javascript');
             $contents = file_get_contents(__DIR__ . '/lib/js/sw-registrar.js');
@@ -151,7 +150,7 @@ if (!class_exists('WP_SW_Manager')) {
             echo $contents;
             $this->end();
         }
-    
+
         public function write_sw($scope) {
             $service_worker = $this->service_workers[$scope];
             header('Content-Type: application/javascript');
@@ -159,11 +158,11 @@ if (!class_exists('WP_SW_Manager')) {
             $service_worker->write_content();
             $this->end();
         }
-    
+
         private function end() {
             exit;
         }
-    
+
         private function json_for_sw_registrations() {
             $registrations = array();
             foreach ($this->service_workers as $scope => $service_worker) {
