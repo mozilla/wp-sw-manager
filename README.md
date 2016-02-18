@@ -8,7 +8,9 @@ Service Workers enable web applications to send push notifications, work offline
 The WP_SW_Manager library provides a collaborative way to generate service workers. It is as simple as registering a callback for writing your service worker functionality:
 
 ```php
-WP_SW_Manager::get_manager()->sw()->add_contents(write_sw);
+include_once(plugins_url(__FILE__) . /vendor/mozilla/wp-sw-manager);
+
+WP_SW_Manager::get_manager()->sw()->add_content(write_sw);
 
 function write_sw() {
     echo 'console.log("Here is my plugin!")';
@@ -53,7 +55,7 @@ If you omit the scope parameter, it will default to [`home_url('/', 'relative')`
 To add your content to the service worker you use:
 
 ```php
-$swmgr->sw()->add_contents(write_sw);
+$swmgr->sw()->add_content(write_sw);
 
 function write_sw() {
     echo 'console.log("Here is my plugin!")';
@@ -63,7 +65,7 @@ function write_sw() {
 You can pass an array instead to deal with class or instance methods:
 
 ```php
-$swmgr->sw()->add_contents(array($this, 'write_sw'));
+$swmgr->sw()->add_content(array($this, 'write_sw'));
 
 public function write_sw() {
     echo 'console.log("Here is my plugin!")';
@@ -73,7 +75,7 @@ public function write_sw() {
 If you have a file with the contents you want to add, you can include it when generating the code:
 
 ```php
-$swmgr->sw()->add_contents(array($this, 'write_sw'));
+$swmgr->sw()->add_content(array($this, 'write_sw'));
 
 public function write_sw() {
     $message = 'Welcome to my plugin!';
