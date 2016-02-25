@@ -88,12 +88,27 @@ public function write_sw() {
 console.log('<?php echo $message; ?>');
 ```
 
+### Writing service workers
+
+When writing your own service worker functionality, the last form from above is preferred to improve maintainability.
+
 It is strongly recommended you enclose your functionality inside an [IIFE](http://benalman.com/news/2010/11/immediately-invoked-function-expression/) and try to not pollute the global namespace. A good template could be:
 
 ```js
 (function(self) {
     // here goes my functionality
 })(self);
+```
+
+#### Storage
+
+Since version 0.3.0 the library embeds [localForage JavaScript library](https://github.com/mozilla/localForage) which enables easy access to IndexedDB through service workers. To avoid name collisions you should create your own namespace with:
+
+```js
+// contents for your service worker
+(function(self, localforage) {
+  var store = localforage.createInstance('__my_wp_plugin');
+})(self, localforage);
 ```
 
 ### Accessing service worker registration
