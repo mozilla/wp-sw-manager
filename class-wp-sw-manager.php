@@ -155,6 +155,7 @@ if (!class_exists('WP_SW_Manager')) {
             $service_worker = $this->service_workers[$scope];
             header('Content-Type: application/javascript');
             header('Service-Worker-Allowed: ' . $scope);
+            include(__DIR__ . '/lib/js/localforage.nopromises.min.js');
             $service_worker->write_content();
             $this->end();
         }
