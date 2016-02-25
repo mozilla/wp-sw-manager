@@ -107,7 +107,7 @@ Since version 0.3.0 the library embeds [localForage JavaScript library](https://
 ```js
 // contents for your service worker
 (function(self, localforage) {
-  var store = localforage.createInstance('__my_wp_plugin');
+  var store = localforage.createInstance({ name: '__my_wp_plugin' });
 })(self, localforage);
 ```
 
