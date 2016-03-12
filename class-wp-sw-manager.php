@@ -131,9 +131,12 @@ if (!class_exists('WP_SW_Manager')) {
         }
 
         public function enqueue_registrar() {
-            $real_absolute_url = $this->router->route_url(self::SW_REGISTRAR_SCRIPT_URL);
-            $relative_to_root_url = ltrim($real_absolute_url, site_url('', 'relative'));
-            wp_enqueue_script(self::SW_REGISTRAR_SCRIPT, $relative_to_root_url);
+            $url = $this->router->route_url(self::SW_REGISTRAR_SCRIPT_URL);
+            $site_url = site_url('', 'relative');
+            if (substr($url, 0, strlen($site_url)) === $site_url) {
+              $url = substr($url, strlen($site_url));
+            }
+            wp_enqueue_script(self::SW_REGISTRAR_SCRIPT, $url);
         }
 
         private function add_new_sw($scope) {
