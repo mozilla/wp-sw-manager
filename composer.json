@@ -8,5 +8,7 @@
             "email": "salva@mozilla.com"
         }
     ],
-    "require": {}
+    "require": {
+      "marco-c/wp_serve_file": "dev-master"
+    }
 }
