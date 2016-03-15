@@ -9,6 +9,6 @@
         }
     ],
     "require": {
-      "marco-c/wp_serve_file": "dev-master"
+        "marco-c/wp_serve_file": "dev-master"
     }
 }
