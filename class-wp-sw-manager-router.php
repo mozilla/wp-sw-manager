@@ -3,6 +3,8 @@
 class WP_SW_Manager_Router {
     const TRIGGER = '_wpswmanager';
 
+    const ACTION = 'wpswmgr_serve';
+
     private static $instance;
 
     public static function get_router() {
@@ -16,8 +18,8 @@ class WP_SW_Manager_Router {
 
     private function __construct() {
         $this->routes = array();
-        add_action('parse_request', array($this, 'parse_request'));
-        add_filter('query_vars', array($this, 'query_vars'));
+        add_action('wp_ajax_'. self::ACTION, array($this, 'parse_request'));
+        add_action('wp_ajax_nopriv_' . self::ACTION, array($this, 'parse_request'));
     }
 
     public function add_route($desired_url, $callback) {
@@ -29,21 +31,16 @@ class WP_SW_Manager_Router {
 
     public function route_url($route_or_desired_url) {
         $route = $this->route($route_or_desired_url);
-        return home_url('/', 'relative') . '?' . self::TRIGGER . '=' . urlencode($route);
+        return admin_url('admin-ajax.php', 'relative') .
+               '?action=' . self::ACTION . '&' . self::TRIGGER . '=' . urlencode($route);
     }
 
-    public function parse_request($query) {
-        $query_vars = $query->query_vars;
-        $route_trigger = $this->identify_trigger($query_vars);
+    public function parse_request() {
+        $route_trigger = $this->identify_trigger($_GET);
         if ($route_trigger) {
             list($handler, $args) = $this->routes[$route_trigger];
             call_user_func_array($handler, $args);
         }
-    }
-
-    public function query_vars($query_vars) {
-        $query_vars[] = self::TRIGGER;
-        return $query_vars;
     }
 
     private function route($desired_url) {

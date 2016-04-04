@@ -165,7 +165,7 @@ if (!class_exists('WP_SW_Manager')) {
         }
 
         private function end() {
-            exit;
+            wp_die();
         }
 
         private function json_for_sw_registrations() {
