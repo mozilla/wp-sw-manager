@@ -3,6 +3,7 @@
 if (!class_exists('WP_SW_Manager')) {
     require_once(__DIR__ . '/class-wp-sw-manager-router.php');
     require_once(__DIR__ . '/class-wp-sw-manager-combinator.php');
+    require_once(__DIR__ . '/lib/class-wp-serve-file.php');
 
     /**
      * Holds the shared manager for composing the service workers.
@@ -50,7 +51,7 @@ if (!class_exists('WP_SW_Manager')) {
          */
         const SW_REGISTRAR_SCRIPT = 'wp-sw-manager-registrar';
 
-        const SW_REGISTRAR_SCRIPT_URL = 'wpswmanager/sw-registrar.js';
+        const SW_REGISTRAR_SCRIPT_URL = 'wpswmanager_sw-registrar.js';
 
         private static $instance;
 
@@ -67,11 +68,14 @@ if (!class_exists('WP_SW_Manager')) {
             return self::$instance;
         }
 
+        private $dynamic_server;
+
         private $router;
 
         private $service_workers;
 
         private function __construct() {
+            $this->dynamic_server = WP_Serve_File::getInstance();
             $this->router = WP_SW_Manager_Router::get_router();
             $this->service_workers = array();
             $this->setup_sw_registrar_script();
@@ -126,18 +130,24 @@ if (!class_exists('WP_SW_Manager')) {
         }
 
         private function setup_sw_registrar_script() {
-            $this->router->add_route(self::SW_REGISTRAR_SCRIPT_URL,  array($this, 'sw_registrar'));
+            $this->dynamic_server->add_file(self::SW_REGISTRAR_SCRIPT_URL,  array($this, 'sw_registrar'));
+            add_action('init', array($this, 'check_registrations'), 999);
             add_action('wp_enqueue_scripts', array($this, 'enqueue_registrar'));
         }
 
-        public function enqueue_registrar() {
-            $url = $this->router->route_url(self::SW_REGISTRAR_SCRIPT_URL);
-            $site_url = site_url('', 'relative');
-            $relative_to_root_url = $url;
-            if (substr($url, 0, strlen($site_url)) === $site_url) {
-              $relative_to_root_url = substr($url, strlen($site_url));
+        public function check_registrations() {
+            $last_registrations = get_option('wpswmanager_registrations', array());
+            $current_registrations = array_keys($this->service_workers);
+            $areEqual = array_count_values($last_registrations) == array_count_values($current_registrations);
+            if (!$areEqual) {
+                $this->dynamic_server->invalidate_files(array(self::SW_REGISTRAR_SCRIPT_URL));
+                update_option('wpswmanager_registrations', $current_registrations);
             }
-            wp_enqueue_script(self::SW_REGISTRAR_SCRIPT, $relative_to_root_url);
+        }
+
+        public function enqueue_registrar() {
+            $url = WP_Serve_File::get_relative_to_wp_root_url(self::SW_REGISTRAR_SCRIPT_URL);
+            wp_enqueue_script(self::SW_REGISTRAR_SCRIPT, $url);
         }
 
         private function add_new_sw($scope) {
@@ -148,11 +158,12 @@ if (!class_exists('WP_SW_Manager')) {
         }
 
         public function sw_registrar() {
-            header('Content-Type: application/javascript');
             $contents = file_get_contents(__DIR__ . '/lib/js/sw-registrar.js');
             $contents = str_replace('$enabledSw', $this->json_for_sw_registrations(), $contents);
-            echo $contents;
-            $this->end();
+            return array(
+                'content' => $contents,
+                'contentType' => 'appliaction/javascript'
+            );
         }
 
         public function write_sw($scope) {

@@ -16,7 +16,7 @@ class WP_SW_Manager_Combinator {
      * to write a portion of the service worker functionality.
      *
      * @api
-     * @param callable $content_generator A calable object in charge of **write,
+     * @param callable $content_generator A callable object in charge of **write,
      * not return** a portion of a service worker.
      */
     public function add_content($content_generator) {

@@ -88,6 +88,8 @@ public function write_sw() {
 console.log('<?php echo $message; ?>');
 ```
 
+Add your content generators always at load time, **before WordPress `init` action**.
+
 ### Writing service workers
 
 When writing your own service worker functionality, the last form from above is preferred to improve maintainability.
