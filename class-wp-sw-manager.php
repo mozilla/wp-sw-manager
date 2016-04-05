@@ -162,7 +162,7 @@ if (!class_exists('WP_SW_Manager')) {
             $contents = str_replace('$enabledSw', $this->json_for_sw_registrations(), $contents);
             return array(
                 'content' => $contents,
-                'contentType' => 'appliaction/javascript'
+                'contentType' => 'application/javascript'
             );
         }
 
