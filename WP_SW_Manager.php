@@ -1,9 +1,10 @@
 <?php
 
+namespace Mozilla;
+
 if (!class_exists('WP_SW_Manager')) {
     require_once(__DIR__ . '/class-wp-sw-manager-router.php');
     require_once(__DIR__ . '/class-wp-sw-manager-combinator.php');
-    require_once(__DIR__ . '/lib/class-wp-serve-file.php');
 
     /**
      * Holds the shared manager for composing the service workers.
@@ -75,7 +76,7 @@ if (!class_exists('WP_SW_Manager')) {
         private $service_workers;
 
         private function __construct() {
-            $this->dynamic_server = WP_Serve_File::getInstance();
+            $this->dynamic_server = Mozilla\WP_Serve_File::getInstance();
             $this->router = WP_SW_Manager_Router::get_router();
             $this->service_workers = array();
             $this->setup_sw_registrar_script();

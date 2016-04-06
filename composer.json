@@ -10,5 +10,10 @@
     ],
     "require": {
         "marco-c/wp_serve_file": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mozilla\\": ""
+        }
     }
 }
