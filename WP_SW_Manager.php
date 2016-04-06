@@ -3,9 +3,6 @@
 namespace Mozilla;
 
 if (!class_exists('WP_SW_Manager')) {
-    require_once(__DIR__ . '/class-wp-sw-manager-router.php');
-    require_once(__DIR__ . '/class-wp-sw-manager-combinator.php');
-
     /**
      * Holds the shared manager for composing the service workers.
      *
