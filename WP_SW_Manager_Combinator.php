@@ -1,4 +1,7 @@
 <?php
+
+namespace Mozilla;
+
 /**
  * Aggregates content generators for a service worker.
  */

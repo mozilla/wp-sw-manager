@@ -1,10 +1,8 @@
 <?php
 
-if (!class_exists('WP_SW_Manager')) {
-    require_once(__DIR__ . '/class-wp-sw-manager-router.php');
-    require_once(__DIR__ . '/class-wp-sw-manager-combinator.php');
-    require_once(__DIR__ . '/lib/class-wp-serve-file.php');
+namespace Mozilla;
 
+if (!class_exists('WP_SW_Manager')) {
     /**
      * Holds the shared manager for composing the service workers.
      *
