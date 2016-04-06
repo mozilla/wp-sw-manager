@@ -73,7 +73,7 @@ if (!class_exists('WP_SW_Manager')) {
         private $service_workers;
 
         private function __construct() {
-            $this->dynamic_server = Mozilla\WP_Serve_File::getInstance();
+            $this->dynamic_server = WP_Serve_File::getInstance();
             $this->router = WP_SW_Manager_Router::get_router();
             $this->service_workers = array();
             $this->setup_sw_registrar_script();
