@@ -1,5 +1,7 @@
 <?php
 
+namespace Mozilla;
+
 class WP_SW_Manager_Router {
     const TRIGGER = '_wpswmanager';
 
