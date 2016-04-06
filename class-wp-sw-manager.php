@@ -171,6 +171,8 @@ if (!class_exists('WP_SW_Manager')) {
             header('Content-Type: application/javascript');
             header('Service-Worker-Allowed: ' . $scope);
             include(__DIR__ . '/lib/js/localforage.nopromises.min.js');
+            include(__DIR__ . '/lib/js/sw-base.js');
+            include(__DIR__ . '/lib/js/sw-start.js');
             $service_worker->write_content();
             $this->end();
         }
