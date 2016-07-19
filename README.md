@@ -1,6 +1,10 @@
 # wp-sw-manager
 > Service Worker infrastructure for WordPress plugins.
 
+[![Code Climate](https://codeclimate.com/github/mozilla/wp-sw-manager/badges/gpa.svg)](https://codeclimate.com/github/mozilla/wp-sw-manager)
+[![Test Coverage](https://codeclimate.com/github/mozilla/wp-sw-manager/badges/coverage.svg)](https://codeclimate.com/github/mozilla/wp-sw-manager/coverage)
+[![Issue Count](https://codeclimate.com/github/mozilla/wp-sw-manager/badges/issue_count.svg)](https://codeclimate.com/github/mozilla/wp-sw-manager)
+
 ## Motivation
 
 Service Workers enable web applications to send push notifications, work offline or perform background tasks periodically. Currently the standard only allows **one service worker per scope** making it hard for plugin developers to combine different focused and isolated functionality.
