@@ -9,8 +9,15 @@
         }
     ],
     "require": {
-        "marco-c/wp_serve_file": "dev-master"
+        "marco-c/wp_serve_file": "dev-master",
+        "stevegrunwell/wp-enforcer": "^0.4.1"
     },
+    "post-install-cmd": [
+    	"wp-enforcer"
+	],
+	"post-update-cmd": [
+    	"wp-enforcer"
+	],
     "autoload": {
         "psr-4": {
             "Mozilla\\": ""
