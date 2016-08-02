@@ -16,10 +16,10 @@
     },
     "post-install-cmd": [
     	"wp-enforcer"
-	],
-	"post-update-cmd": [
+    ],
+    "post-update-cmd": [
     	"wp-enforcer"
-	],
+    ],
     "autoload": {
         "psr-4": {
             "Mozilla\\": ""
