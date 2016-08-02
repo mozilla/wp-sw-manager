@@ -189,7 +189,7 @@ if ( ! class_exists( 'WP_SW_Manager' ) ) {
 					);
 				}
 			}
-			return wp_json_encode( $registrations );
+			return json_encode( $registrations );
 		}
 	}
 }
