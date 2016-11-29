@@ -6,10 +6,32 @@ namespace Mozilla;
  * Aggregates content generators for a service worker.
  */
 class WP_SW_Manager_Combinator {
+
+	/**
+	 * url
+	 *
+	 * @var mixed
+	 * @access private
+	 */
 	private $url;
 
+	/**
+	 * writers
+	 *
+	 * (default value: array())
+	 *
+	 * @var array
+	 * @access private
+	 */
 	private $writers = array();
 
+	/**
+	 * __construct function.
+	 *
+	 * @access public
+	 * @param mixed $url
+	 * @return void
+	 */
 	public function __construct( $url ) {
 		$this->url = $url;
 	}
@@ -26,6 +48,12 @@ class WP_SW_Manager_Combinator {
 		$this->writers[] = $content_generator;
 	}
 
+	/**
+	 * write_content function.
+	 *
+	 * @access public
+	 * @return void
+	 */
 	public function write_content() {
 		foreach ( $this->writers as $content_generator ) {
 			echo ';';
@@ -33,12 +61,23 @@ class WP_SW_Manager_Combinator {
 		}
 	}
 
+	/**
+	 * get_url function.
+	 *
+	 * @access public
+	 * @return void
+	 */
 	public function get_url() {
 		return $this->url;
 	}
 
+	/**
+	 * has_content function.
+	 *
+	 * @access public
+	 * @return void
+	 */
 	public function has_content() {
 		return count( $this->writers ) != 0;
 	}
 }
-?>

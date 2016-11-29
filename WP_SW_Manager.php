@@ -51,6 +51,13 @@ if ( ! class_exists( 'WP_SW_Manager' ) ) {
 
 		const SW_REGISTRAR_SCRIPT_URL = 'wpswmanager_sw-registrar.js';
 
+		/**
+		 * instance
+		 *
+		 * @var mixed
+		 * @access private
+		 * @static
+		 */
 		private static $instance;
 
 		/**
@@ -66,12 +73,36 @@ if ( ! class_exists( 'WP_SW_Manager' ) ) {
 			return self::$instance;
 		}
 
+		/**
+		 * dynamic_server
+		 *
+		 * @var mixed
+		 * @access private
+		 */
 		private $dynamic_server;
 
+		/**
+		 * router
+		 *
+		 * @var mixed
+		 * @access private
+		 */
 		private $router;
 
+		/**
+		 * service_workers
+		 *
+		 * @var mixed
+		 * @access private
+		 */
 		private $service_workers;
 
+		/**
+		 * __construct function.
+		 *
+		 * @access private
+		 * @return void
+		 */
 		private function __construct() {
 			$this->dynamic_server = WP_Serve_File::getInstance();
 			$this->router = WP_SW_Manager_Router::get_router();
@@ -123,16 +154,34 @@ if ( ! class_exists( 'WP_SW_Manager' ) ) {
 			return $scope;
 		}
 
+		/**
+		 * default_scope function.
+		 *
+		 * @access private
+		 * @return void
+		 */
 		private function default_scope() {
 			return site_url( '/', 'relative' );
 		}
 
+		/**
+		 * setup_sw_registrar_script function.
+		 *
+		 * @access private
+		 * @return void
+		 */
 		private function setup_sw_registrar_script() {
 			$this->dynamic_server->add_file( self::SW_REGISTRAR_SCRIPT_URL,  array( $this, 'sw_registrar' ) );
 			add_action( 'init', array( $this, 'check_registrations' ), 999 );
 			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_registrar' ) );
 		}
 
+		/**
+		 * check_registrations function.
+		 *
+		 * @access public
+		 * @return void
+		 */
 		public function check_registrations() {
 			$last_registrations = get_option( 'wpswmanager_registrations', array() );
 			$current_registrations = array_keys( $this->service_workers );
@@ -143,11 +192,24 @@ if ( ! class_exists( 'WP_SW_Manager' ) ) {
 			}
 		}
 
+		/**
+		 * enqueue_registrar function.
+		 *
+		 * @access public
+		 * @return void
+		 */
 		public function enqueue_registrar() {
 			$url = WP_Serve_File::get_relative_to_wp_root_url( self::SW_REGISTRAR_SCRIPT_URL );
 			wp_enqueue_script( self::SW_REGISTRAR_SCRIPT, $url );
 		}
 
+		/**
+		 * add_new_sw function.
+		 *
+		 * @access private
+		 * @param mixed $scope
+		 * @return void
+		 */
 		private function add_new_sw( $scope ) {
 			$virtual_url = "wpswmanager/sw/sw@$scope";
 			$real_url = $this->router->add_route( $virtual_url, array( $this, 'write_sw' ), $scope );
@@ -155,6 +217,12 @@ if ( ! class_exists( 'WP_SW_Manager' ) ) {
 			$this->service_workers[ $scope ] = $service_worker;
 		}
 
+		/**
+		 * sw_registrar function.
+		 *
+		 * @access public
+		 * @return void
+		 */
 		public function sw_registrar() {
 			$contents = file_get_contents( __DIR__ . '/lib/js/sw-registrar.js' );
 			$contents = str_replace( '$enabledSw', $this->json_for_sw_registrations(), $contents );
@@ -164,6 +232,13 @@ if ( ! class_exists( 'WP_SW_Manager' ) ) {
 			);
 		}
 
+		/**
+		 * write_sw function.
+		 *
+		 * @access public
+		 * @param mixed $scope
+		 * @return void
+		 */
 		public function write_sw( $scope ) {
 			$service_worker = $this->service_workers[ $scope ];
 			header( 'Content-Type: application/javascript' );
@@ -175,10 +250,22 @@ if ( ! class_exists( 'WP_SW_Manager' ) ) {
 			$this->end();
 		}
 
+		/**
+		 * end function.
+		 *
+		 * @access private
+		 * @return void
+		 */
 		private function end() {
 			wp_die();
 		}
 
+		/**
+		 * json_for_sw_registrations function.
+		 *
+		 * @access private
+		 * @return void
+		 */
 		private function json_for_sw_registrations() {
 			$registrations = array();
 			foreach ( $this->service_workers as $scope => $service_worker ) {
