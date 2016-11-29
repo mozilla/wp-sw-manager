@@ -6,39 +6,78 @@ namespace Mozilla;
  * Aggregates content generators for a service worker.
  */
 class WP_SW_Manager_Combinator {
-    private $url;
 
-    private $writers = array();
+	/**
+	 * url
+	 *
+	 * @var mixed
+	 * @access private
+	 */
+	private $url;
 
-    public function __construct($url) {
-        $this->url = $url;
-    }
+	/**
+	 * writers
+	 *
+	 * (default value: array())
+	 *
+	 * @var array
+	 * @access private
+	 */
+	private $writers = array();
 
-    /**
-     * Registers a callback to be called when generating the service worker
-     * to write a portion of the service worker functionality.
-     *
-     * @api
-     * @param callable $content_generator A callable object in charge of **write,
-     * not return** a portion of a service worker.
-     */
-    public function add_content($content_generator) {
-        $this->writers[] = $content_generator;
-    }
+	/**
+	 * __construct function.
+	 *
+	 * @access public
+	 * @param mixed $url
+	 * @return void
+	 */
+	public function __construct( $url ) {
+		$this->url = $url;
+	}
 
-    public function write_content() {
-        foreach ($this->writers as $content_generator) {
-            echo ';';
-            call_user_func($content_generator);
-        }
-    }
+	/**
+	 * Registers a callback to be called when generating the service worker
+	 * to write a portion of the service worker functionality.
+	 *
+	 * @api
+	 * @param callable $content_generator A callable object in charge of **write,
+	 * not return** a portion of a service worker.
+	 */
+	public function add_content( $content_generator ) {
+		$this->writers[] = $content_generator;
+	}
 
-    public function get_url() {
-        return $this->url;
-    }
+	/**
+	 * write_content function.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function write_content() {
+		foreach ( $this->writers as $content_generator ) {
+			echo ';';
+			call_user_func( $content_generator );
+		}
+	}
 
-    public function has_content() {
-        return count($this->writers) != 0;
-    }
+	/**
+	 * get_url function.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function get_url() {
+		return $this->url;
+	}
+
+	/**
+	 * has_content function.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function has_content() {
+		return count( $this->writers ) != 0;
+	}
 }
-?>

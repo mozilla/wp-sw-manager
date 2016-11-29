@@ -11,6 +11,9 @@
     "require": {
         "marco-c/wp_serve_file": "dev-master"
     },
+    "require-dev": {
+        "stevegrunwell/wp-enforcer": "^0.4.1"
+    },
     "autoload": {
         "psr-4": {
             "Mozilla\\": ""
